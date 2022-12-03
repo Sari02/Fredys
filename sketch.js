@@ -1,6 +1,10 @@
 var bg, bgImg;
 var holmes, holmesImg;
-
+var repartidor,repartidorImg, pizza, pizzaImg, dinero, dineroImg;
+var llaveroja, llaverojaImg, llaveazul, llaveazulImg, llaveverde, llaveverdeImg;
+var puerta, puertaImg, librero, libreroImg, estante, estanteImg, alacena, alacenaImg;
+var freddy, freddyImg, palanca, palancaImg;
+var cofre, cofre2, cofreImg, cajapizza, cajapizzaImg, ataud, ataudImg, caja, cajaImg;
 let walls;
 let wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24,wall25,wall26,wall27,wall28,wall29,wall30;
 
@@ -8,9 +12,24 @@ var gameState=0;
 
 
 function preload(){
-//bgImg = loadImage("assets/bg.png")
 
-holmesImg = loadImage("assets/detective.png")
+  holmesImg = loadImage("assets/detective.png");
+  repartidorImg = loadImage("assets/repartidor.png");
+  freddyImg = loadImage("assets/freddys.png");
+  pizzaImg = loadImage("assets/pizza.png");
+  dineroImg = loadImage("assets/dinero.png"); 
+  llaverojaImg = loadImage("assets/llaveroja.png");
+  llaveazulImg = loadImage("assets/llaveazul.png");
+  llaveverdeImg = loadImage("assets/llaveverde.png");
+  palancaImg = loadImage("assets/palanca.png");
+  puertaImg = loadImage("assets/puerta.png");
+  libreroImg = loadImage("assets/librero.png");
+  estanteImg = loadImage("assets/estante.png");
+  alacenaImg = loadImage("assets/alacena.png");
+  cofreImg = loadImage("assets/cofre.png");
+  cajapizzaImg = loadImage("assets/cajapizza.png");
+  cajaImg = loadImage("assets/caja.png");
+  ataudImg = loadImage("assets/ataud.png");
 }
 
 function setup(){
@@ -18,16 +37,44 @@ function setup(){
   // createCanvas(windowWidth,windowHeight);
 
   createCanvas(1800,980);
+//Sprites
+  holmes = createSprite(100, 100, 20, 20);
+  holmes.addImage(holmesImg);
 
-  //background image
-  //bg = createSprite(165,485,1,1);
-  //bg.addImage(bgImg);
-  //bg.scale = 1.3
+  repartidor = createSprite(950, 280, 20, 20);
+  repartidor.addImage(repartidorImg);
 
-  holmes = createSprite(900, 350, 20, 20);
-  holmes.addImage(holmesImg)
-  //holmes.debug = true
-  //holmes.setCollider("rectangle",0,0,300,300)
+  freddy = createSprite(1180, 910, 20, 20);
+  freddy.addImage(freddyImg);
+
+  llaveazul = createSprite(1750, 930, 20, 20);
+  llaveazul.addImage(llaveazulImg);
+  llaveazul.scale = 0.5;
+  cofre = createSprite(1750, 930, 20, 20);
+  cofre.addImage(cofreImg);
+  llaveroja = createSprite(1340, 640, 20, 20);
+  llaveroja.addImage(llaverojaImg);
+  llaveroja.scale = 0.5;
+  alacena = createSprite(1340, 640, 20, 20);
+  alacena.addImage(alacenaImg);
+  llaveverde = createSprite(80, 910, 20, 20);
+  llaveverde.addImage(llaveverdeImg);
+  llaveverde.scale = 0.5;
+  ataud = createSprite(80, 910, 20, 20);
+  ataud.addImage(ataudImg);
+  palanca = createSprite(845, 270, 20, 20);
+  palanca.addImage(palancaImg);
+  palanca.scale = 0.5;
+  cajapizza = createSprite(845, 270, 20, 20);
+  cajapizza.addImage(cajapizzaImg);
+  dinero = createSprite(1700, 120, 20, 20);
+  dinero.addImage(dineroImg);
+  dinero.scale = 0.5;
+  cofre2 = createSprite(1700, 120, 20, 20);
+  cofre2.addImage(cofreImg);
+
+  puerta = createSprite(30, 90, 20, 20);
+  puerta.addImage(puertaImg);
 
   walls = new Group();
 
@@ -108,6 +155,11 @@ function draw() {
 
   print(holmes.x);
   print(holmes.y);
+  textSize(20);
+  text("La puerta esta lockeada, encuentra la llave que la abre",100,20);
+
+  //inventario
+
 
   //dibujar paredes por coordenadas
   //NO BORRAR SOLO COMENTARLAS CON CONTROL + /, ya que las lineas se dibujan diferente a los sprites
