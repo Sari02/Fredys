@@ -10,6 +10,14 @@ let wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,w
 
 var gameState=0;
 
+var banderaKeyRed = false;
+var banderaKeyBlue = false;
+var banderaKeyGreen = false;
+var banderaDinero = false;
+var counterWalls = 0;
+var counterWalk = 0;
+var nivelSusto = 0;
+
 
 function preload(){
 
@@ -157,6 +165,7 @@ function draw() {
   print(holmes.y);
   textSize(20);
   text("La puerta esta lockeada, encuentra la llave que la abre",100,20);
+  text("Porcentaje de susto: " + nivelSusto/3, 1500, 20);
 
   //inventario
 
@@ -204,18 +213,91 @@ function draw() {
   line(1800,0,1800,980);
 
         
-  //movimiento
+  //movimiento , con chequeo de bandera azul para mover a freedy hacia la puerta
   if(keyDown("UP_ARROW")){
     holmes.y = holmes.y-3
+    if(banderaKeyBlue){
+      counterWalk ++;
+      if(counterWalk >= 15){
+        moveFreedy();
+        counterWalk = 0;
+      }
+    }
   }
+
   if(keyDown("DOWN_ARROW")){
     holmes.y = holmes.y+3
+    if(banderaKeyBlue){
+      counterWalk ++;
+      if(counterWalk >= 15){
+        moveFreedy();
+        counterWalk = 0;
+      }
+    }
   }
+
   if(keyDown("LEFT_ARROW")){
     holmes.x = holmes.x-3
+    if(banderaKeyBlue){
+      counterWalk ++;
+      if(counterWalk >= 15){
+        moveFreedy();
+        counterWalk = 0;
+      }
+    }
   }
+
   if(keyDown("RIGHT_ARROW")){
     holmes.x = holmes.x+3
+    if(banderaKeyBlue){
+      counterWalk ++;
+      if(counterWalk >= 15){
+        moveFreedy();
+        counterWalk = 0;
+      }
+    }
+  }
+
+  //jugabilidad
+  if((holmes.isTouching(cofre))&&(banderaKeyRed)){
+    cofre.visible = false;
+    banderaKeyBlue = true;
+    moveFreedy();
+  }
+
+  if((holmes.isTouching(cofre2))&&(banderaKeyGreen)){
+    cofre2.visible = false;
+    banderaDinero = true;
+    moveFreedy();
+
+  }
+
+  if(holmes.isTouching(alacena)){
+    alacena.visible = false;
+    banderaKeyRed = true;
+    alacena.destroy();
+    moveFreedy();
+  }
+
+  //move freedy cada 10 milisecs que toques una pared
+  if(holmes.isTouching(walls)){
+    counterWalls ++;
+    if(counterWalls >= 10){
+      moveFreedy();
+      counterWalls = 0;
+    }
+  }
+
+  //nivel de susto de holmes cuando toca a Freedy
+  if(holmes.isTouching(freddy)){
+    nivelSusto ++;
+  }
+
+  //GAME OVER cuando el susto llega a 100, puede ser mas de 100 en caso de subirlo a 200 poner en el text "nivelSusto/2"
+  if(nivelSusto >= 300){
+    textSize(200);
+    stroke("red");
+    text("Perdiste",600,500);
   }
 
   holmes.collide(walls);
@@ -225,3 +307,9 @@ function draw() {
   drawSprites();
         
 }
+
+// movimiento de freedy , respecto a la posicion de holmes
+function moveFreedy(){
+  freddy.x = random(0, holmes.x);
+  freddy.y = random(0, holmes.y);
+};
