@@ -1,3 +1,4 @@
+
 var bg, bgImg;
 var holmes, holmesImg;
 var repartidor,repartidorImg, pizza, pizzaImg, dinero, dineroImg;
@@ -8,7 +9,7 @@ var cofre, cofre2, cofreImg, cajapizza, cajapizzaImg, ataud, ataudImg, caja, caj
 let walls;
 let wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24,wall25,wall26,wall27,wall28,wall29,wall30;
 
-var gameState=0;
+var gameState="PLAY";
 
 var banderaKeyRed = false;
 var banderaKeyBlue = false;
@@ -47,7 +48,7 @@ function setup(){
 
   createCanvas(1800,980);
 //Sprites
-  holmes = createSprite(100, 100, 20, 20);
+  holmes = createSprite(750, 300, 20, 20);
   holmes.addImage(holmesImg);
 
   repartidor = createSprite(950, 280, 20, 20);
@@ -101,6 +102,8 @@ function setup(){
   wall10 = createSprite(350, 700, 100,3);
   wall11 = createSprite(950, 700, 900,3);
   wall12 = createSprite(100, 770, 200,3);
+  inventario = createSprite(800,0,400,150);
+  inventario.visible = false;
 
   walls.add(wall1);
   walls.add(wall2);
@@ -115,6 +118,7 @@ function setup(){
   walls.add(wall11);
   walls.add(wall12);
   walls.add(wall13);
+  walls.add(inventario);
 
   //verticales
   wall14 = createSprite(200, 910, 3, 140);
@@ -164,14 +168,14 @@ function draw() {
 
   print(holmes.x);
   print(holmes.y);
-  textSize(20);
-  text("La puerta esta lockeada, encuentra la llave que la abre",100,20);
-  text("Porcentaje de susto: " + nivelSusto/3, 1500, 20);
-
-  //inventario
 
 
-  //dibujar paredes por coordenadas
+  if(gameState === "PLAY"){
+    textSize(20);
+    text("La puerta esta lockeada, encuentra la llave que la abre",100,20);
+    text("Porcentaje de susto: " + nivelSusto/3, 1500, 20);
+
+      //dibujar paredes por coordenadas
   //NO BORRAR SOLO COMENTARLAS CON CONTROL + /, ya que las lineas se dibujan diferente a los sprites
   stroke("white");
   strokeWeight(3);
@@ -213,8 +217,7 @@ function draw() {
   line(0,0,0,980);
   line(1800,0,1800,980);
 
-        
-  //movimiento , con chequeo de bandera azul para mover a freedy hacia la puerta
+    //movimiento , con chequeo de bandera azul para mover a freedy hacia la puerta
   if(keyDown("UP_ARROW")){
     holmes.y = holmes.y-3
     if(banderaKeyBlue){
@@ -259,11 +262,13 @@ function draw() {
     }
   }
 
-  //jugabilidad
+   //jugabilidad
   if((holmes.isTouching(cofre))&&(banderaKeyRed)){
     cofre.visible = false;
     banderaKeyBlue = true;
     moveFreedy();
+    llaveazul.x =  750;
+    llaveazul.y = 30
   }
 
   if((holmes.isTouching(cofre2))&&(banderaKeyGreen)){
@@ -283,6 +288,8 @@ function draw() {
     banderaPalanca = true;
     cajapizza.destroy();
     moveFreedy();
+    palanca.x = 650;
+    palanca.y = 30
   }
 
   if(holmes.isTouching(alacena)){
@@ -290,12 +297,14 @@ function draw() {
     banderaKeyRed = true;
     alacena.destroy();
     moveFreedy();
+    llaveroja.x = 700;
+    llaveroja.y = 30
   }
 
   if(holmes.isTouching(repartidor)){
     textSize(20);
     stroke("red");
-    text("Dame el dinero y te dare algo que te servira",800,20);
+    text("Dame el dinero y te dare algo que te servira",710,240);
   }
 
   //move freedy cada 10 milisecs que toques una pared
@@ -312,19 +321,25 @@ function draw() {
     nivelSusto ++;
   }
 
-  //GAME OVER cuando el susto llega a 100, puede ser mas de 100 en caso de subirlo a 200 poner en el text "nivelSusto/2"
+    //GAME OVER cuando el susto llega a 100, puede ser mas de 100 en caso de subirlo a 200 poner en el text "nivelSusto/2"
   if(nivelSusto >= 300){
-    textSize(200);
-    stroke("red");
-    text("Perdiste",600,500);
-    createImage()
+    gameState = "FIN";
   }
 
   holmes.collide(walls);
 
-
-   
   drawSprites();
+
+  }
+  else{
+    textSize(200);
+    stroke("red");
+    text("Perdiste",600,500);
+    //createImage()
+
+  }
+
+
         
 }
 
