@@ -14,6 +14,7 @@ var banderaKeyRed = false;
 var banderaKeyBlue = false;
 var banderaKeyGreen = false;
 var banderaDinero = false;
+var banderaPalanca = false;
 var counterWalls = 0;
 var counterWalk = 0;
 var nivelSusto = 0;
@@ -269,7 +270,19 @@ function draw() {
     cofre2.visible = false;
     banderaDinero = true;
     moveFreedy();
+  }
 
+  if((holmes.isTouching(ataud))&&(banderaPalanca)){
+    ataud.visible = false;
+    banderaKeyGreen = true;
+    moveFreedy();
+  }
+
+  if(holmes.isTouching(cajapizza)){
+    cajapizza.visible = false;
+    banderaPalanca = true;
+    cajapizza.destroy();
+    moveFreedy();
   }
 
   if(holmes.isTouching(alacena)){
@@ -277,6 +290,12 @@ function draw() {
     banderaKeyRed = true;
     alacena.destroy();
     moveFreedy();
+  }
+
+  if(holmes.isTouching(repartidor)){
+    textSize(20);
+    stroke("red");
+    text("Dame el dinero y te dare algo que te servira",800,20);
   }
 
   //move freedy cada 10 milisecs que toques una pared
@@ -298,6 +317,7 @@ function draw() {
     textSize(200);
     stroke("red");
     text("Perdiste",600,500);
+    createImage()
   }
 
   holmes.collide(walls);
