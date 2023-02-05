@@ -1,5 +1,4 @@
-
-var bg, bgImg;
+var bg, bgImg, lostImg, winImg;
 var holmes, holmesImg;
 var repartidor,repartidorImg, pizza, pizzaImg, dinero, dineroImg;
 var llaveroja, llaverojaImg, llaveazul, llaveazulImg, llaveverde, llaveverdeImg;
@@ -23,7 +22,7 @@ var nivelSusto = 0;
 
 
 function preload(){
-  bgImg = loadImage("assets/bg1.png")
+  bgImg = loadImage("assets/bg.png")
   holmesImg = loadImage("assets/detective.png");
   repartidorImg = loadImage("assets/repartidor.png");
   freddyImg = loadImage("assets/freddys.png");
@@ -43,9 +42,10 @@ function preload(){
   ataudImg = loadImage("assets/ataud.png");
   pizzaImg = loadImage("assets/pizza.png");
   lostImg = loadImage("assets/scarerd.png");
+  winImg = loadImage("assets/win.jpg");
 
-  bgSong = loadSound("assets/assets_bgsound1.mp3");
-  lostSong = loadSound("assets/assets_scarejump.mp3");
+  bgSong = loadSound("assets/bgsound1.mp3");
+  lostSong = loadSound("assets/scarejump.mp3");
   
 }
 
@@ -64,7 +64,7 @@ function setup(){
 
   pizza = createSprite(950, 280, 20, 20);
   pizza.addImage(pizzaImg);
-  pizza.scale = 0.2;
+  pizza.scale = 0.4;
   repartidor = createSprite(950, 280, 20, 20);
   repartidor.addImage(repartidorImg); 
 
@@ -103,15 +103,15 @@ function setup(){
   walls = new Group();
 
   //horizontales
-  wall1 = createSprite(1700, 70, 200,3);
-  wall2 = createSprite(800, 140, 1000,3);
-  wall3 = createSprite(85, 220, 200,3);
+  wall1 = createSprite(1700, 80, 200,20);
+  wall2 = createSprite(800, 150, 1000,10);
+  wall3 = createSprite(105, 220, 210,20);
   wall4 = createSprite(550, 290, 280,3);
   wall5 = createSprite(1200, 280, 200,3);
   wall6 = createSprite(440, 430, 260,3);
   wall7 = createSprite(900, 420, 400,3);
   wall13 = createSprite(1700, 420, 200,3);
-  wall8 = createSprite(1250, 490, 300,3);
+  wall8 = createSprite(1280, 490, 250,3);
   wall9 = createSprite(190, 630, 220,3);
   wall10 = createSprite(350, 700, 100,3);
   wall11 = createSprite(950, 700, 900,3);
@@ -135,12 +135,12 @@ function setup(){
   walls.add(inventario);
 
   //verticales
-  wall14 = createSprite(180, 910, 3, 140);
+  wall14 = createSprite(200, 910, 3, 140);
   wall15 = createSprite(300, 420, 3, 560);
-  wall16 = createSprite(400, 805, 3, 210);
+  wall16 = createSprite(400, 805, 3, 200);
   wall17 = createSprite(600, 35, 3, 60);
-  wall18 = createSprite(700, 315, 3, 210);
-  wall19 = createSprite(690, 910, 3, 160);
+  wall18 = createSprite(700, 330, 3, 180);
+  wall19 = createSprite(700, 910, 3, 160);
   wall20 = createSprite(900, 630, 3, 140);
   wall21 = createSprite(1100, 630, 3, 140);
   wall22 = createSprite(1100, 280, 3, 280);
@@ -389,8 +389,10 @@ function draw() {
   drawSprites();
 
   } else if(gameState === "WIN"){
+    image(winImg, 0, 0);
     textSize(200);
-    stroke("white");
+    fill("red");
+    stroke("black");
     text("ESCAPASTE",400,500);
     nivelSusto = 0;
 
