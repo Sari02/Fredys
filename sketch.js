@@ -1,3 +1,4 @@
+
 var bg, bgImg;
 var holmes, holmesImg;
 var repartidor,repartidorImg, pizza, pizzaImg, dinero, dineroImg;
@@ -8,19 +9,21 @@ var cofre, cofre2, cofreImg, cajapizza, cajapizzaImg, ataud, ataudImg, caja, caj
 let walls;
 let wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24,wall25,wall26,wall27,wall28,wall29,wall30;
 
-var gameState=0;
+var gameState="PLAY";
 
 var banderaKeyRed = false;
 var banderaKeyBlue = false;
 var banderaKeyGreen = false;
 var banderaDinero = false;
+var banderaPalanca = false;
+var banderaPizzaBuff = false;
 var counterWalls = 0;
 var counterWalk = 0;
 var nivelSusto = 0;
 
 
 function preload(){
-
+  bgImg = loadImage("assets/bg1.png")
   holmesImg = loadImage("assets/detective.png");
   repartidorImg = loadImage("assets/repartidor.png");
   freddyImg = loadImage("assets/freddys.png");
@@ -38,6 +41,12 @@ function preload(){
   cajapizzaImg = loadImage("assets/cajapizza.png");
   cajaImg = loadImage("assets/caja.png");
   ataudImg = loadImage("assets/ataud.png");
+  pizzaImg = loadImage("assets/pizza.png");
+  lostImg = loadImage("assets/scarerd.png");
+
+  bgSong = loadSound("assets/assets_bgsound1.mp3");
+  lostSong = loadSound("assets/assets_scarejump.mp3");
+  
 }
 
 function setup(){
@@ -45,12 +54,19 @@ function setup(){
   // createCanvas(windowWidth,windowHeight);
 
   createCanvas(1800,980);
+  // bg = createSprite(900,490,100,100);
+  // bg.addImage(bgImg);
+  // bg.scale = 0.915;
 //Sprites
-  holmes = createSprite(100, 100, 20, 20);
+
+  holmes = createSprite(750, 300, 20, 20);
   holmes.addImage(holmesImg);
 
+  pizza = createSprite(950, 280, 20, 20);
+  pizza.addImage(pizzaImg);
+  pizza.scale = 0.2;
   repartidor = createSprite(950, 280, 20, 20);
-  repartidor.addImage(repartidorImg);
+  repartidor.addImage(repartidorImg); 
 
   freddy = createSprite(1180, 910, 20, 20);
   freddy.addImage(freddyImg);
@@ -89,17 +105,19 @@ function setup(){
   //horizontales
   wall1 = createSprite(1700, 70, 200,3);
   wall2 = createSprite(800, 140, 1000,3);
-  wall3 = createSprite(100, 210, 200,3);
-  wall4 = createSprite(550, 280, 300,3);
+  wall3 = createSprite(85, 220, 200,3);
+  wall4 = createSprite(550, 290, 280,3);
   wall5 = createSprite(1200, 280, 200,3);
-  wall6 = createSprite(450, 420, 300,3);
+  wall6 = createSprite(440, 430, 260,3);
   wall7 = createSprite(900, 420, 400,3);
   wall13 = createSprite(1700, 420, 200,3);
   wall8 = createSprite(1250, 490, 300,3);
-  wall9 = createSprite(200, 630, 200,3);
+  wall9 = createSprite(190, 630, 220,3);
   wall10 = createSprite(350, 700, 100,3);
   wall11 = createSprite(950, 700, 900,3);
-  wall12 = createSprite(100, 770, 200,3);
+  wall12 = createSprite(100, 770, 140,3);
+  inventario = createSprite(800,0,400,150);
+  inventario.visible = false;
 
   walls.add(wall1);
   walls.add(wall2);
@@ -114,20 +132,21 @@ function setup(){
   walls.add(wall11);
   walls.add(wall12);
   walls.add(wall13);
+  walls.add(inventario);
 
   //verticales
-  wall14 = createSprite(200, 910, 3, 140);
+  wall14 = createSprite(180, 910, 3, 140);
   wall15 = createSprite(300, 420, 3, 560);
   wall16 = createSprite(400, 805, 3, 210);
-  wall17 = createSprite(600, 35, 3, 70);
+  wall17 = createSprite(600, 35, 3, 60);
   wall18 = createSprite(700, 315, 3, 210);
-  wall19 = createSprite(700, 910, 3, 140);
+  wall19 = createSprite(690, 910, 3, 160);
   wall20 = createSprite(900, 630, 3, 140);
   wall21 = createSprite(1100, 630, 3, 140);
   wall22 = createSprite(1100, 280, 3, 280);
-  wall23 = createSprite(1200, 105, 3, 70);
+  wall23 = createSprite(1200, 105, 3, 50);
   wall24 = createSprite(1400, 420, 3, 560);
-  wall25 = createSprite(1600, 210, 3, 280);
+  wall25 = createSprite(1610, 210, 3, 280);
   wall26 = createSprite(1700, 770, 3, 420);
 
   walls.add(wall14);
@@ -155,22 +174,31 @@ function setup(){
   walls.add(wall30);
 
   walls.immovable = true;
+  backgroundSong();
+}
+
+function backgroundSong() {
+    bgSong.play();
+    bgSong.loop();
+    bgSong.setVolume(0.4);        //puede ser entre 0 (muteado) hasta 1 (muy alto)
+    userStartAudio();
 }
 
 function draw() {
   
-  background("black");
+  background(bgImg);
 
-  print(holmes.x);
-  print(holmes.y);
-  textSize(20);
-  text("La puerta esta lockeada, encuentra la llave que la abre",100,20);
-  text("Porcentaje de susto: " + nivelSusto/3, 1500, 20);
-
-  //inventario
+  // print(holmes.x);
+  // print(holmes.y);
 
 
-  //dibujar paredes por coordenadas
+  if(gameState === "PLAY"){
+    textSize(22);
+    fill("white");
+    text("La puerta esta lockeada, encuentra la llave que la abre",20,20);
+    text("Porcentaje de susto: " + nivelSusto/3, 1500, 20);
+
+      //dibujar paredes por coordenadas
   //NO BORRAR SOLO COMENTARLAS CON CONTROL + /, ya que las lineas se dibujan diferente a los sprites
   stroke("white");
   strokeWeight(3);
@@ -212,10 +240,13 @@ function draw() {
   line(0,0,0,980);
   line(1800,0,1800,980);
 
-        
-  //movimiento , con chequeo de bandera azul para mover a freedy hacia la puerta
+    //movimiento , con chequeo de bandera azul para mover a freedy hacia la puerta
   if(keyDown("UP_ARROW")){
-    holmes.y = holmes.y-3
+    if(banderaPizzaBuff){
+      holmes.y = holmes.y-6
+    }else if(!banderaPizzaBuff){
+      holmes.y = holmes.y-3
+    }
     if(banderaKeyBlue){
       counterWalk ++;
       if(counterWalk >= 15){
@@ -226,7 +257,11 @@ function draw() {
   }
 
   if(keyDown("DOWN_ARROW")){
-    holmes.y = holmes.y+3
+    if(banderaPizzaBuff){
+      holmes.y = holmes.y+6
+    }else if(!banderaPizzaBuff){
+      holmes.y = holmes.y+3
+    }
     if(banderaKeyBlue){
       counterWalk ++;
       if(counterWalk >= 15){
@@ -237,7 +272,11 @@ function draw() {
   }
 
   if(keyDown("LEFT_ARROW")){
-    holmes.x = holmes.x-3
+    if(banderaPizzaBuff){
+      holmes.x = holmes.x-6
+    }else if(!banderaPizzaBuff){
+      holmes.x = holmes.x-3
+    }
     if(banderaKeyBlue){
       counterWalk ++;
       if(counterWalk >= 15){
@@ -248,7 +287,11 @@ function draw() {
   }
 
   if(keyDown("RIGHT_ARROW")){
-    holmes.x = holmes.x+3
+    if(banderaPizzaBuff){
+      holmes.x = holmes.x+6
+    }else if(!banderaPizzaBuff){
+      holmes.x = holmes.x+3
+    }
     if(banderaKeyBlue){
       counterWalk ++;
       if(counterWalk >= 15){
@@ -258,25 +301,68 @@ function draw() {
     }
   }
 
-  //jugabilidad
+   //jugabilidad
   if((holmes.isTouching(cofre))&&(banderaKeyRed)){
-    cofre.visible = false;
+    cofre.destroy();
     banderaKeyBlue = true;
     moveFreedy();
+    llaveazul.x =  750;
+    llaveazul.y = 30;
   }
 
   if((holmes.isTouching(cofre2))&&(banderaKeyGreen)){
-    cofre2.visible = false;
+    cofre2.destroy();
     banderaDinero = true;
     moveFreedy();
+    dinero.x =  850;
+    dinero.y = 30;
+  }
 
+  if((holmes.isTouching(ataud))&&(banderaPalanca)){
+    ataud.destroy();
+    banderaKeyGreen = true;
+    moveFreedy();
+    llaveverde.x = 800;
+    llaveverde.y = 30;
+  }
+
+  if(holmes.isTouching(cajapizza)){
+    cajapizza.destroy();
+    banderaPalanca = true;
+    cajapizza.destroy();
+    moveFreedy();
+    palanca.x = 650;
+    palanca.y = 30
   }
 
   if(holmes.isTouching(alacena)){
-    alacena.visible = false;
+    alacena.destroy();
     banderaKeyRed = true;
     alacena.destroy();
     moveFreedy();
+    llaveroja.x = 700;
+    llaveroja.y = 30
+  }
+
+  if(holmes.isTouching(repartidor)&&(!banderaDinero)){
+    textSize(20);
+    stroke("red");
+    text("Dame el dinero y te dare algo que te servira",710,240);
+  }else if(holmes.isTouching(repartidor)&&(banderaDinero)){
+    textSize(20);
+    stroke("red");
+    text("Toma este bolillo para el susto",710,240);
+    banderaPizzaBuff = true;
+    pizza.x = 900;
+    pizza.y = 30;
+  }
+
+  if(holmes.isTouching(puerta)&&(banderaKeyBlue)){
+    textSize(200);
+    stroke("white");
+    text("ESCAPASTE",600,500);
+    gameState = "WIN";
+    nivelSusto = 0;
   }
 
   //move freedy cada 10 milisecs que toques una pared
@@ -293,18 +379,32 @@ function draw() {
     nivelSusto ++;
   }
 
-  //GAME OVER cuando el susto llega a 100, puede ser mas de 100 en caso de subirlo a 200 poner en el text "nivelSusto/2"
+    //GAME OVER cuando el susto llega a 100, puede ser mas de 100 en caso de subirlo a 200 poner en el text "nivelSusto/2"
   if(nivelSusto >= 300){
-    textSize(200);
-    stroke("red");
-    text("Perdiste",600,500);
+    gameState = "FIN";
   }
 
   holmes.collide(walls);
 
-
-   
   drawSprites();
+
+  } else if(gameState === "WIN"){
+    textSize(200);
+    stroke("white");
+    text("ESCAPASTE",400,500);
+    nivelSusto = 0;
+
+  } else if(gameState === "FIN"){
+    image(lostImg,200,100);
+    textSize(200);
+    stroke("red");
+    text("GameOver",400,500);
+    bgSong.stop();
+    lostSong.play();
+    lostSong.setVolume(1);
+  }
+
+
         
 }
 
